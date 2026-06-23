@@ -3,14 +3,14 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "scout-tester"
+name = "cli-tester"
 version = "0.1.0"
 description = "Reproducible tester for GitHub Copilot CLI skills"
 requires-python = ">=3.10"
 dependencies = ["PyYAML>=6.0", "mcp>=1.2.0"]
 
 [project.scripts]
-scout-tester = "scout_tester.cli:main"
+cli-tester = "cli_tester.cli:main"
 
 [tool.setuptools]
-packages = ["scout_tester"]
+packages = ["cli_tester"]

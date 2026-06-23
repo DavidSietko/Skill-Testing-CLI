@@ -1,4 +1,4 @@
-"""scout-tester command-line interface."""
+"""cli-tester command-line interface."""
 from __future__ import annotations
 
 import argparse
@@ -90,7 +90,7 @@ def _cmd_test(args: argparse.Namespace) -> int:
         if profile_empty:
             print(
                 f"\n⚠️ Live profile at {live_profile} looks empty — you may not be "
-                f"logged in.\n   Run `scout-tester login` first if the agent can't read your data.\n"
+                f"logged in.\n   Run `cli-tester login` first if the agent can't read your data.\n"
             )
 
     timeout = args.timeout
@@ -285,7 +285,7 @@ def _cmd_init(args: argparse.Namespace) -> int:
         for p in problems:
             print(f"  - {p}")
     print("\nReview the generated files, then run:")
-    print(f"  scout-tester test {args.skill}")
+    print(f"  cli-tester test {args.skill}")
     return 0
 
 
@@ -305,10 +305,10 @@ def _cmd_login(args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
-        prog="scout-tester",
+        prog="cli-tester",
         description="Test Copilot CLI skills in a reproducible, isolated environment.",
     )
-    p.add_argument("--version", action="version", version=f"scout-tester {__version__}")
+    p.add_argument("--version", action="version", version=f"cli-tester {__version__}")
     sub = p.add_subparsers(dest="command", required=True)
 
     v = sub.add_parser("validate", help="Validate a skill directory and its tests.yaml")
@@ -328,7 +328,7 @@ def build_parser() -> argparse.ArgumentParser:
     t.add_argument("--no-auth-check", action="store_true", help="Skip the pre-run Copilot authentication probe")
     t.add_argument("--jobs", type=int, default=0, help="Max parallel runs per scenario (0 = auto: min(runs, 5); forced to 1 in --live mode)")
     t.add_argument("--live", action="store_true", help="LIVE mode: give the agent a real browser (Playwright) to read real Outlook/Teams — not reproducible")
-    t.add_argument("--profile", help="Browser profile dir for live mode (default: .scout-tester/live-profile)")
+    t.add_argument("--profile", help="Browser profile dir for live mode (default: .cli-tester/live-profile)")
     t.add_argument("--headless", action="store_true", help="Run the live browser headless (default: headed)")
     t.add_argument("--browser", default="chromium", choices=["chromium", "chrome", "msedge"], help="Live browser channel (use msedge for managed/Conditional-Access tenants)")
     t.add_argument("--cdp-endpoint", help="Attach live mode to an already-running browser (e.g. http://localhost:9222) instead of launching one — reuses your signed-in, policy-compliant session")
@@ -343,7 +343,7 @@ def build_parser() -> argparse.ArgumentParser:
     g.set_defaults(func=_cmd_init)
 
     lg = sub.add_parser("login", help="One-time interactive browser login for live mode (persists a profile)")
-    lg.add_argument("--profile", help="Browser profile dir to save the login (default: .scout-tester/live-profile)")
+    lg.add_argument("--profile", help="Browser profile dir to save the login (default: .cli-tester/live-profile)")
     lg.add_argument("--url", help="URL to open for login (default: Outlook web)")
     lg.add_argument("--browser", default="msedge", choices=["chromium", "chrome", "msedge"], help="Browser channel (default: msedge — best for managed/Conditional-Access tenants)")
     lg.add_argument("--cdp-endpoint", help="Attach to an already-running browser instead of launching one")

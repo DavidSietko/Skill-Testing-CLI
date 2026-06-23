@@ -11,7 +11,7 @@ venv/
 
 # --- Test output (may contain REAL data + copied auth state) ---
 reports/
-.scout-tester/
+.cli-tester/
 .playwright-mcp/
 
 # --- Sensitive auth / session state (belt-and-suspenders) ---

@@ -107,7 +107,7 @@ def preflight_auth(model: str | None = None, timeout_s: int = 90) -> str | None:
         return None
 
     copilot = _copilot_path()
-    probe_home = Path(tempfile.mkdtemp(prefix="scout-auth-"))
+    probe_home = Path(tempfile.mkdtemp(prefix="cli-tester-auth-"))
     (probe_home / "skills").mkdir(parents=True, exist_ok=True)
     _copy_auth_state(probe_home)
     env = os.environ.copy()
@@ -326,7 +326,7 @@ def run_copilot_prompt(
     Returns the final assistant text.
     """
     copilot = _copilot_path()
-    home = Path(os.environ.get("TEMP", "/tmp")) / f"scout-judge-{uuid.uuid4().hex[:8]}"
+    home = Path(os.environ.get("TEMP", "/tmp")) / f"cli-tester-judge-{uuid.uuid4().hex[:8]}"
     home.mkdir(parents=True, exist_ok=True)
     _copy_auth_state(home)
     env = os.environ.copy()

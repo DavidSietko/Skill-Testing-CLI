@@ -1,5 +1,5 @@
-"""Live mode: give the test agent a real browser (Playwright MCP) so it can read
-Outlook/Teams web — the same browser-automation approach Scout uses.
+"""Live mode: give the test agent a real browser (Playwright MCP) so it can sign
+into your Microsoft account and read Outlook, Teams, and other M365 apps on the web.
 
 Live mode is NOT reproducible and touches real data, so it is gated behind an
 explicit consent prompt and a one-time interactive login that persists a browser
@@ -16,7 +16,7 @@ DEFAULT_LOGIN_URL = "https://outlook.office.com/mail/"
 
 
 def default_profile_dir() -> Path:
-    return (Path(".scout-tester") / "live-profile").resolve()
+    return (Path(".cli-tester") / "live-profile").resolve()
 
 
 def _npx_command(extra_args: list[str]) -> tuple[str, list[str]]:
@@ -105,8 +105,8 @@ def interactive_login(
 CONSENT_TEXT = """\
 ⚠️  LIVE MODE — this is NOT a safe, reproducible test.
 
-It will launch a REAL browser logged into your account and let the agent read
-your actual data (Outlook/Teams/GitHub/etc.) via browser automation (like Scout).
+It will launch a REAL browser that signs into your Microsoft account and let the
+agent read your actual Outlook, Teams, and other M365 data via browser automation.
 
   • Real personal data may be read.
   • Results are not reproducible (your real data changes).

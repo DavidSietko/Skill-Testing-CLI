@@ -1,4 +1,4 @@
-# scout-tester
+# cli-tester
 
 A lean CLI for testing **GitHub Copilot CLI skills** in a reproducible, isolated
 environment. Point it at a skill directory; it spawns the real `copilot` agent
@@ -11,7 +11,7 @@ plus a small `tests.yaml` sidecar.
 ## How it works
 
 ```
-scout-tester test ./skills/<name>
+cli-tester test ./skills/<name>
    │
    ├─ build a throwaway COPILOT_HOME containing ONLY this skill
    ├─ copy scenario fixtures into a sandbox working dir
@@ -36,8 +36,8 @@ python -m venv .venv
 
 Requires the GitHub Copilot CLI (`copilot`) on your PATH and a working login.
 
-> **Use a venv.** Install scout-tester into a virtual environment and run it as
-> `.\.venv\Scripts\python.exe -m scout_tester …` (or activate the venv first).
+> **Use a venv.** Install cli-tester into a virtual environment and run it as
+> `.\.venv\Scripts\python.exe -m cli_tester …` (or activate the venv first).
 
 ## Getting started after cloning
 
@@ -52,8 +52,8 @@ mkdir skills\my-skill
 notepad skills\my-skill\SKILL.md     # write the skill (see "Skill layout" below)
 
 # 2) Let the AI scaffold tests + synthetic fixtures, then run
-scout-tester init my-skill
-scout-tester test my-skill
+cli-tester init my-skill
+cli-tester test my-skill
 ```
 
 You can also keep skills anywhere: every command accepts a **path** to a skill
@@ -65,19 +65,19 @@ no credentials or data travel in the repo.
 
 ```powershell
 # Validate a skill + its test spec
-scout-tester validate greeter
+cli-tester validate greeter
 
 # AI-generate a tests.yaml + synthetic fixtures for a skill that has none
-scout-tester init email-parser
+cli-tester init email-parser
 
 # Test it (runs every scenario in tests.yaml)
-scout-tester test email-parser
+cli-tester test email-parser
 
 # Useful flags
-scout-tester test greeter --scenario basic-greeting   # one scenario
-scout-tester test greeter --runs 5                     # reliability: 5 runs each
-scout-tester test greeter --model claude-sonnet-4.6    # pin a model
-scout-tester test greeter --no-judge                   # assertions only
+cli-tester test greeter --scenario basic-greeting   # one scenario
+cli-tester test greeter --runs 5                     # reliability: 5 runs each
+cli-tester test greeter --model claude-sonnet-4.6    # pin a model
+cli-tester test greeter --no-judge                   # assertions only
 ```
 
 The skill argument accepts a **bare name** (resolved under `skills/`) or a path.
@@ -96,7 +96,7 @@ skills/
 ## Two ways to run a skill
 
 Skills are **mode-agnostic** — a SKILL.md just says what to do (e.g. "read the
-user's Outlook inbox"), never how the data is delivered. scout-tester supplies
+user's Outlook inbox"), never how the data is delivered. cli-tester supplies
 that framing:
 
 | Mode | Where the data comes from | What it proves |
@@ -109,7 +109,7 @@ with its native file tools; in live mode it uses a real browser. The *same* skil
 runs unmodified in both.
 
 > **Local context note.** In local mode, when a scenario ships fixtures,
-> scout-tester appends a short note to the prompt telling the agent that live
+> cli-tester appends a short note to the prompt telling the agent that live
 > services are unavailable and equivalent data has been exported to its working
 > directory. This keeps the SKILL.md generic — the local-vs-live awareness lives
 > in the harness, not the skill.
@@ -142,16 +142,16 @@ that scenario (or pass `--no-judge` globally).
 > `forbidden_tools` still work for real tool names (e.g. `view`, `browser_*`) but
 > are rarely needed in local mode.
 
-## `scout-tester init` — let the AI scaffold the tests
+## `cli-tester init` — let the AI scaffold the tests
 
 `init` reads a skill's `SKILL.md`, asks the Copilot agent to author a `tests.yaml`
 plus **synthetic fixtures** (e.g. a fake inbox export), and writes them for you to
 review:
 
 ```powershell
-scout-tester init teams-unread        # writes tests.yaml + fixtures/*.json
+cli-tester init teams-unread        # writes tests.yaml + fixtures/*.json
 # review/tweak the generated files, then:
-scout-tester test teams-unread
+cli-tester test teams-unread
 ```
 
 ⚠️ Generated tests are a **starting point a human reviews**, not ground truth —
@@ -161,22 +161,21 @@ over-strict assertions. Always sanity-check the fixtures and assertions.
 ## Live mode — test against real Outlook/Teams (gated)
 
 Local mode is the default and is what you want for repeatable tests. For a check
-against your **real** Microsoft 365 data, `--live` gives the
+against your **real** data, `--live` signs into your Microsoft account and gives the
 agent a real browser (the [Playwright MCP](https://github.com/microsoft/playwright-mcp))
-and lets it read Outlook/Teams web — the same browser-automation approach Scout
-uses (Graph/M365 APIs are tenant-restricted, so web automation is the path).
+so it can read your Outlook, Teams, and other Microsoft 365 apps on the web.
 
 ```powershell
 # 1) One-time: sign in once; the browser profile is saved to disk
-scout-tester login
+cli-tester login
 
 # 2) Run a scenario against real data (headed browser, asks for consent)
-.\.venv\Scripts\python.exe -m scout_tester test email-parser --live
+.\.venv\Scripts\python.exe -m cli_tester test email-parser --live
 
 # Flags
-scout-tester test email-parser --live --headless   # no visible window
-scout-tester test email-parser --live --yes        # skip the consent prompt (CI)
-scout-tester test email-parser --live --profile C:\path\to\profile
+cli-tester test email-parser --live --headless   # no visible window
+cli-tester test email-parser --live --yes        # skip the consent prompt (CI)
+cli-tester test email-parser --live --profile C:\path\to\profile
 ```
 
 Requirements: Node/`npx` on PATH and the Playwright browser, installed once with:
@@ -190,7 +189,7 @@ results vary as your inbox changes. In live mode `files:` is ignored — the age
 uses generic `browser_*` tools against the real services, so a browser-based
 "send" won't be caught by `forbidden_tools`. Prefer **read-only** scenarios in
 live mode and keep local mode as your source of truth. The saved login profile
-lives under `.scout-tester/live-profile` (git-ignored).
+lives under `.cli-tester/live-profile` (git-ignored).
 
 ## Reports
 
