@@ -1,0 +1,33 @@
+# --- Python ---
+__pycache__/
+*.pyc
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+/skills
+
+# --- Test output (may contain REAL data + copied auth state) ---
+reports/
+.scout-tester/
+.playwright-mcp/
+
+# --- Sensitive auth / session state (belt-and-suspenders) ---
+# Isolated Copilot homes carry a copy of config.json (logged-in account pointer);
+# live browser profiles hold session cookies/tokens. Never commit these, wherever
+# a custom --out path puts them.
+**/copilot-home/
+**/live-profile/
+**/config.json
+*.env
+.env
+.env.*
+
+# --- OS / editor junk ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log
