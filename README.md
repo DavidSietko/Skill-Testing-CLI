@@ -8,6 +8,14 @@ deterministic assertions **and** an LLM judge, and writes a report.
 No adapters, lockfiles, or workflow YAML sprawl — a skill is just its `SKILL.md`
 plus a small `tests.yaml` sidecar.
 
+## Features
+
+- **Isolated runs** — each test spawns `copilot` with only the skill under test loaded, via a throwaway `COPILOT_HOME`
+- **Deterministic assertions + LLM judge** — check exact conditions (tool calls, output substrings) and grade against a plain-English rubric
+- **AI-scaffolded tests** — `cli-tester init` generates a starter `tests.yaml` and synthetic fixtures from a skill's `SKILL.md`
+- **Local or live data** — run against safe synthetic fixtures by default, or opt into a consent-gated `--live` mode against real Outlook/Teams data
+- **CI-friendly** — exits non-zero on any failed run; writes machine-readable `results.json` alongside a human-readable report
+
 ## How it works
 
 ```
